@@ -4,6 +4,7 @@
   "description": "A chromium information aggregator",
   "main": "index.js",
   "dependencies": {
+    "@prisma/client": "^4.2.1",
     "axios": "^0.27.2"
   },
   "devDependencies": {
