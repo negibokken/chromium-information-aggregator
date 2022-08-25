@@ -7,7 +7,7 @@ datasource db {
   url = env("DATABASE_URL")
   referentialIntegrity = "prisma"
 }
-model Commits {
+model commits {
   commit String @id
   title String
   message String? @db.MediumText
