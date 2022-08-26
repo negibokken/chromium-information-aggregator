@@ -11,6 +11,6 @@ jobs:
       with:
         node-version: 16
         cache: 'npm'
-        cache-dependency-path: subdir/package-lock.json
+        cache-dependency-path: package-lock.json
     - run: npm ci
     - run: npm run commits:run
