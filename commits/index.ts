@@ -1,7 +1,7 @@
 import {PrismaClient} from '@prisma/client';
 
 process.env.DATABASE_URL =
-    Buffer.from(process.env.DATABASE_URL || '', 'base64').toString();
+    Buffer.from(process.env.DATABASE_URL_ENCODED || '', 'base64').toString();
 
 const prismaClient = new PrismaClient();
 
