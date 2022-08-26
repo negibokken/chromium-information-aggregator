@@ -12,6 +12,6 @@ jobs:
       with:
         node-version: 16
         cache: 'npm'
-    - run: cd commits && npx prisma generate
     - run: npm ci
+    - run: cd commits && npx prisma generate
     - run: npm run commits:run
