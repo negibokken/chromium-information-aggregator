@@ -1,7 +1,7 @@
 name: crawler
 on:
   schedule:
-    - cron:  '*/30 * * * *'
+    - cron:  '*/15 * * * *'
 jobs:
   commits_crawler:
     runs-on: ubuntu-latest
@@ -12,5 +12,6 @@ jobs:
       with:
         node-version: 16
         cache: 'npm'
+    - run: npx prisma generate
     - run: npm ci
     - run: npm run commits:run
