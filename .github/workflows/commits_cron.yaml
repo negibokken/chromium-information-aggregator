@@ -1,7 +1,7 @@
 name: crawler
 on:
   schedule:
-    - cron:  '*/5 * * * *'
+    - cron:  '7 * * * *'
 jobs:
   commits_crawler:
     runs-on: ubuntu-latest
