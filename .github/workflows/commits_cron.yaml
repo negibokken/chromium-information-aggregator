@@ -1,7 +1,7 @@
 name: crawler
 on:
   schedule:
-    - cron:  '0 */4 * * *'
+    - cron:  '*/30 * * * *'
 jobs:
   commits_crawler:
     runs-on: ubuntu-latest
@@ -15,3 +15,5 @@ jobs:
     - run: npm ci
     - run: cd commits && npx prisma generate
     - run: npm run commits:run
+      env:
+        DATABASE_URL: ${{ secrets.DATABASE_URL }}
