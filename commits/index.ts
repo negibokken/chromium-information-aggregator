@@ -3,28 +3,36 @@ import {PrismaClient} from '@prisma/client';
 const prismaClient = new PrismaClient();
 
 const axios = require('axios').default;
-const url = 'https://chromium.googlesource.com/chromium/src/+log?format=JSON';
 
 type Commit = {
     commit: string; title: string; message: string; commitAt: Date;
-}
+};
 
 type CommitResponse = {
     log: ChromiumCommit[]; next: string;
-}
+};
 
 type CommitHash = string;
 
 type AuthorInfo = {
     name: string; email: string; time: string;
-}
+};
 
 type ChromiumCommit = {
     commit: CommitHash; tree: CommitHash; parents: CommitHash[];
     author: AuthorInfo;
     committer: AuthorInfo;
     message: string;
+};
+
+function sleep(sec: number) {
+    return new Promise((resolve, reject) => {
+        setTimeout(() => resolve(0), sec * 1000);
+    });
 }
+
+
+const url = `https://chromium.googlesource.com/chromium/src/+log?format=JSON`;
 
 (async () => {
     try {
@@ -46,33 +54,68 @@ type ChromiumCommit = {
             const title = log.message.slice(0, firstLineBreak);
             const message = log.message.slice(firstLineBreak);
             return {
-                commit: log.commit, title: title, message: message,
-                    commitAt: new Date(log.committer.time),
-            }
+                commit: log.commit,
+                title: title,
+                message: message,
+                commitAt: new Date(log.committer.time),
+            };
         });
 
-        const query =
-            commits.map((commit) => {return prismaClient.commits.upsert({
-                            where: {
-                                commit: commit.commit,
-                            },
-                            update: {
-                                message: commit.message,
-                                title: commit.title,
-                            },
-                            create: {
-                                commit: commit.commit,
-                                title: commit.title,
-                                message: commit.message,
-                                commitAt: commit.commitAt,
-                            }
-                        })})
+        const notificationTargets = commits.filter((commit) => {
+            return (
+                commit.message.includes('HTTP/3') ||
+                commit.title.includes('HTTP/3'));
+        });
+        if (notificationTargets.length > 0 && process.env.WEB_HOOK_URL) {
+            await axios.post(process.env.WEB_HOOK_URL, {
+                text: `commits`,
+                blocks: notificationTargets.map((commit) => {
+                    return {
+                        type: 'mrkdwn',
+                        text:
+                            `<https://chromium.googlesource.com/chromium/src/+/${
+                                commit.commit}|${commit.commit.slice(0, 8)}>: ${
+                                commit.title}`,
+                    };
+                }),
+            });
+        }
 
+        const queries = commits.map((commit) => {
+            return prismaClient.commits.upsert({
+                where: {
+                    commit: commit.commit,
+                },
+                update: {
+                    message: commit.message,
+                    title: commit.title,
+                },
+                create: {
+                    commit: commit.commit,
+                    title: commit.title,
+                    message: commit.message,
+                    commitAt: commit.commitAt,
+                },
+            });
+        });
 
-        const result = await prismaClient.$transaction([...query]);
-        console.log(`${result.length} rows were inserted or updated!`)
+        function splitQuery(queries, unit) {
+            const n = queries.length;
+            const numPerQuery = n / unit;
+            const result = [];
+            for (let i = 0; i < n; i += numPerQuery) {
+                result.push(queries.slice(i, Math.min(i + numPerQuery, n)));
+            }
+            return result;
+        }
 
+        const splitQueries = splitQuery(queries, 10);
+
+        for (const q of splitQueries) {
+            const result = await prismaClient.$transaction([...q]);
+            console.log(`${result.length} rows were inserted or updated!`);
+        }
     } catch (e) {
         console.error(e);
     }
-})()
+})();
