@@ -99,7 +99,7 @@ const url = `https://chromium.googlesource.com/chromium/src/+log?format=JSON`;
             });
         });
 
-        function splitQuery(queries, unit) {
+        function splitQuery(queries: any[], unit: any) {
             const n = queries.length;
             const numPerQuery = n / unit;
             const result = [];
