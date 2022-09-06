@@ -17,3 +17,4 @@ jobs:
     - run: npm run commits:run
       env:
         DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        WEB_HOOK_URL: ${{ secrets.WEB_HOOK_URL }}
