@@ -69,7 +69,7 @@ const url = `https://chromium.googlesource.com/chromium/src/+log?format=JSON`;
             //     );
             // })
             .map((commit) => {
-                return `[${commit.commit.slice(
+                return `* [${commit.commit.slice(
                     0,
                     8
                 )}](https://chromium.googlesource.com/chromium/src/+/${
@@ -77,9 +77,9 @@ const url = `https://chromium.googlesource.com/chromium/src/+log?format=JSON`;
                 }) ${commit.title}`;
             });
         if (notificationTargets.length > 0 && process.env.WEB_HOOK_URL) {
-            await axios.post(process.env.WEB_HOOK_URL, {
-                content: `${notificationTargets.join('\n')}`,
-            });
+            const content = notificationTargets.join('\n');
+            console.log('content-length', content.length);
+            await axios.post(process.env.WEB_HOOK_URL, { content });
         }
 
         const queries = commits.map((commit) => {
