@@ -76,6 +76,8 @@ const url = `https://chromium.googlesource.com/chromium/src/+log?format=JSON`;
                     commit.commit
                 }) ${commit.title}`;
             });
+        console.log('notificationTarget: ', notificationTargets);
+        console.log('web_hook_url', !!process.env.WEB_HOOK_URL);
         if (notificationTargets.length > 0 && process.env.WEB_HOOK_URL) {
             await axios.post(process.env.WEB_HOOK_URL, {
                 content: `${notificationTargets.join('\n')}`,
