@@ -79,7 +79,9 @@ const url = `https://chromium.googlesource.com/chromium/src/+log?format=JSON`;
         if (notificationTargets.length > 0 && process.env.WEB_HOOK_URL) {
             const content = notificationTargets.join('\n');
             console.log('content-length', content.length);
-            await axios.post(process.env.WEB_HOOK_URL, { content });
+            await axios.post(process.env.WEB_HOOK_URL, {
+                content: content.slice(0, 2000),
+            });
         }
 
         const queries = commits.map((commit) => {
