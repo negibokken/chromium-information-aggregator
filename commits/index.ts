@@ -61,23 +61,24 @@ const url = `https://chromium.googlesource.com/chromium/src/+log?format=JSON`;
             };
         });
 
-        const notificationTargets = commits.filter((commit) => {
-            return (
-                commit.message.includes('HTTP/3') ||
-                commit.title.includes('HTTP/3'));
-        });
+        const notificationTargets = commits
+            // .filter((commit) => {
+            //     return (
+            //         commit.message.includes('HTTP/3') ||
+            //         commit.title.includes('HTTP/3')
+            //     );
+            // })
+            .map((commit) => {
+                return `[${commit.commit.slice(
+                    0,
+                    8
+                )}](https://chromium.googlesource.com/chromium/src/+/${
+                    commit.commit
+                }) ${commit.title}`;
+            });
         if (notificationTargets.length > 0 && process.env.WEB_HOOK_URL) {
             await axios.post(process.env.WEB_HOOK_URL, {
-                text: `commits`,
-                blocks: notificationTargets.map((commit) => {
-                    return {
-                        type: 'mrkdwn',
-                        text:
-                            `<https://chromium.googlesource.com/chromium/src/+/${
-                                commit.commit}|${commit.commit.slice(0, 8)}>: ${
-                                commit.title}`,
-                    };
-                }),
+                content: `${notificationTargets.join('\n')}`,
             });
         }
 
