@@ -10,12 +10,15 @@ datasource db {
 model commits {
   commit String @id
   title String? @db.Text
+  author String? @db.TinyText
+  authorAddress String? @db.TinyText
   message String? @db.MediumText
   commitAt DateTime
   createdAt  DateTime @default(now()) @db.Timestamp(0)
   updatedAt  DateTime @default(now()) @updatedAt @db.Timestamp(0)
 
   @@index([commitAt(sort: Desc)])
-  @@fulltext([message])
   @@fulltext([title, message])
+  @@fulltext([message])
+  @@fulltext([author])
 }
