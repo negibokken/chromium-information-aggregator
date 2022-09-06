@@ -77,11 +77,30 @@ const url = `https://chromium.googlesource.com/chromium/src/+log?format=JSON`;
                 }) ${commit.title}`;
             });
         if (notificationTargets.length > 0 && process.env.WEB_HOOK_URL) {
-            const content = notificationTargets.join('\n');
-            console.log('content-length', content.length);
-            await axios.post(process.env.WEB_HOOK_URL, {
-                content: content.slice(0, 2000),
-            });
+            let i = 0;
+            const n = notificationTargets.length;
+            while (i < n) {
+                const start = i;
+                let num = 0;
+                while (num < 1700 && i < n) {
+                    num += notificationTargets[i].length;
+                    i += 1;
+                }
+                if (num === 0) {
+                    break;
+                }
+                const end = i - 1;
+                const content = notificationTargets
+                    .slice(start, end)
+                    .join('\n');
+                try {
+                    await axios.post(process.env.WEB_HOOK_URL, {
+                        content: content,
+                    });
+                } catch (e) {
+                    console.error(e);
+                }
+            }
         }
 
         const queries = commits.map((commit) => {
