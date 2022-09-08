@@ -1,25 +1,33 @@
-import {PrismaClient} from '@prisma/client';
+import { PrismaClient } from '@prisma/client';
 
 const prismaClient = new PrismaClient();
 
 const axios = require('axios').default;
 
 type Commit = {
-    commit: string; title: string; message: string; commitAt: Date;
+    commit: string;
+    title: string;
+    message: string;
+    commitAt: Date;
 };
 
 type CommitResponse = {
-    log: ChromiumCommit[]; next: string;
+    log: ChromiumCommit[];
+    next: string;
 };
 
 type CommitHash = string;
 
 type AuthorInfo = {
-    name: string; email: string; time: string;
+    name: string;
+    email: string;
+    time: string;
 };
 
 type ChromiumCommit = {
-    commit: CommitHash; tree: CommitHash; parents: CommitHash[];
+    commit: CommitHash;
+    tree: CommitHash;
+    parents: CommitHash[];
     author: AuthorInfo;
     committer: AuthorInfo;
     message: string;
@@ -30,7 +38,6 @@ function sleep(sec: number) {
         setTimeout(() => resolve(0), sec * 1000);
     });
 }
-
 
 const url = `https://chromium.googlesource.com/chromium/src/+log?format=JSON`;
 
@@ -46,8 +53,7 @@ const url = `https://chromium.googlesource.com/chromium/src/+log?format=JSON`;
         //   ...
         // }
         const firstLineBreak = res.data.indexOf('\n');
-        const data =
-            JSON.parse(res.data.slice(firstLineBreak)) as CommitResponse;
+        const data = JSON.parse(res.data.slice(firstLineBreak)) as CommitResponse;
 
         const commits: Commit[] = data.log.map((log) => {
             const firstLineBreak = log.message.indexOf('\n');
@@ -72,9 +78,9 @@ const url = `https://chromium.googlesource.com/chromium/src/+log?format=JSON`;
                 return `* [${commit.commit.slice(
                     0,
                     8
-                )}](https://chromium.googlesource.com/chromium/src/+/${
-                    commit.commit
-                }) ${commit.title}`;
+                )}](https://chromium.googlesource.com/chromium/src/+/${commit.commit}%5E%21/) ${
+                    commit.title
+                }`;
             });
         if (notificationTargets.length > 0 && process.env.WEB_HOOK_URL) {
             let i = 0;
@@ -90,9 +96,7 @@ const url = `https://chromium.googlesource.com/chromium/src/+log?format=JSON`;
                     break;
                 }
                 const end = i - 1;
-                const content = notificationTargets
-                    .slice(start, end)
-                    .join('\n');
+                const content = notificationTargets.slice(start, end).join('\n');
                 try {
                     await axios.post(process.env.WEB_HOOK_URL, {
                         content: content,
