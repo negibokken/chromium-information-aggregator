@@ -53,7 +53,9 @@ const url = `https://chromium.googlesource.com/chromium/src/+log?format=JSON`;
         //   ...
         // }
         const firstLineBreak = res.data.indexOf('\n');
-        const data = JSON.parse(res.data.slice(firstLineBreak)) as CommitResponse;
+        const data = JSON.parse(
+            res.data.slice(firstLineBreak)
+        ) as CommitResponse;
 
         const commits: Commit[] = data.log.map((log) => {
             const firstLineBreak = log.message.indexOf('\n');
@@ -67,6 +69,8 @@ const url = `https://chromium.googlesource.com/chromium/src/+log?format=JSON`;
             };
         });
 
+        // const lastCommit = TODO
+
         const notificationTargets = commits
             // .filter((commit) => {
             //     return (
@@ -78,9 +82,9 @@ const url = `https://chromium.googlesource.com/chromium/src/+log?format=JSON`;
                 return `* [${commit.commit.slice(
                     0,
                     8
-                )}](https://chromium.googlesource.com/chromium/src/+/${commit.commit}%5E%21/) ${
-                    commit.title
-                }`;
+                )}](https://chromium.googlesource.com/chromium/src/+/${
+                    commit.commit
+                }%5E%21/) ${commit.title}`;
             });
         if (notificationTargets.length > 0 && process.env.WEB_HOOK_URL) {
             let i = 0;
@@ -96,7 +100,9 @@ const url = `https://chromium.googlesource.com/chromium/src/+log?format=JSON`;
                     break;
                 }
                 const end = i - 1;
-                const content = notificationTargets.slice(start, end).join('\n');
+                const content = notificationTargets
+                    .slice(start, end)
+                    .join('\n');
                 try {
                     await axios.post(process.env.WEB_HOOK_URL, {
                         content: content,
