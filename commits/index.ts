@@ -107,6 +107,7 @@ const url = `https://chromium.googlesource.com/chromium/src/+log?format=JSON`;
                     await axios.post(process.env.WEB_HOOK_URL, {
                         content: content,
                     });
+                    await sleep(1);
                 } catch (e) {
                     console.error(e);
                 }
