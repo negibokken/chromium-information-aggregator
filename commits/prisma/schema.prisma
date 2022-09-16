@@ -12,10 +12,14 @@ model commits {
   title String? @db.Text
   message String? @db.MediumText
   commitAt DateTime
+  authorName String @default("")
+  authorMail String @default("")
   createdAt  DateTime @default(now()) @db.Timestamp(0)
   updatedAt  DateTime @default(now()) @updatedAt @db.Timestamp(0)
 
   @@index([commitAt(sort: Desc)])
+  @@index([authorName])
+  @@index([authorMail])
   @@fulltext([message])
   @@fulltext([title, message])
 }

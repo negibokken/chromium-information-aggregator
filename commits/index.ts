@@ -6,6 +6,7 @@ const axios = require('axios').default;
 
 type Commit = {
     commit: string; title: string; message: string; commitAt: Date;
+    authorName: string, authorMail: string;
 };
 
 type CommitResponse = {
@@ -62,6 +63,8 @@ function sleep(sec: number) {
                     title: title,
                     message: message,
                     commitAt: new Date(log.committer.time),
+                    authorName: log.author.name,
+                    authorMail: log.author.email,
                 };
             });
 
@@ -136,6 +139,8 @@ function sleep(sec: number) {
                         title: commit.title,
                         message: commit.message,
                         commitAt: commit.commitAt,
+                        authorName: commit.authorName,
+                        authorMail: commit.authorMail,
                     },
                 });
             });
