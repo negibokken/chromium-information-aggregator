@@ -1,6 +1,7 @@
 {
   "scripts": {
     "start": "npx ts-node index.ts",
+    "loop": "npx ts-node loop.ts",
     "migrate": "DATABASE_URL='mysql://root@127.0.0.1:3309/chromium-news' npx prisma db push"
   }
 }
