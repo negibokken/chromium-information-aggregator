@@ -128,8 +128,6 @@ function sleep(sec: number) {
                 }
             }
 
-            console.log(notSavedCommits);
-
             const queries = notSavedCommits.map((commit) => {
                 return prismaClient.commits.upsert({
                     where: {commit: commit.commit},
