@@ -2,8 +2,7 @@ const axios = require('axios').default;
 const parseStringPromise = require('xml2js').parseStringPromise
 
 const url = 'https://www.mail-archive.com/blink-dev@chromium.org/maillist.xml';
-const webhookURL =
-    'https://discord.com/api/webhooks/1022677217102286960/8LWIahleMqyT6ohbF9DGkBE1xDfYch0i0Rh4G6dC5DTfW_N2a-jlbXJfGF21rahWinog';
+const webhookURL = process.env.WEBHOOK_URL;
 
 (async () => {
     try {
