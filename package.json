@@ -17,6 +17,7 @@
   },
   "scripts": {
     "commits:run": "npx ts-node commits/index.ts",
+    "intents:run": "npx ts-node intents_to_ship/index.ts",
     "format": "prettier --write **/*.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

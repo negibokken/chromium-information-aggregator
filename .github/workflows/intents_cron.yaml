@@ -1,0 +1,20 @@
+name: crawler
+on:
+  schedule:
+    - cron:  '0 */3 * * *'
+jobs:
+  commits_crawler:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions/setup-node@v3
+      with:
+        node-version: 16
+        cache: 'npm'
+    - run: npm ci
+    - run: npx prisma generate
+    - run: npm run intents:run
+      env:
+        DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        WEB_HOOK_URL: ${{ secrets.INTENT_TO_SHIP_WEBHOOK_URL }}

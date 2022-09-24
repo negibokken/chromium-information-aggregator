@@ -23,3 +23,16 @@ model commits {
   @@fulltext([message])
   @@fulltext([title, message])
 }
+
+model intents {
+  guid String @id
+  title String @db.Text
+  link String @db.Text
+  pubDate DateTime
+  createdAt  DateTime @default(now()) @db.Timestamp(0)
+  updatedAt  DateTime @default(now()) @updatedAt @db.Timestamp(0)
+
+  @@fulltext([title])
+  @@index([pubDate(sort: Desc)])
+  @@index([guid])
+}
