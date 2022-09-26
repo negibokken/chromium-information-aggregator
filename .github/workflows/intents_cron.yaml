@@ -13,7 +13,7 @@ jobs:
         node-version: 16
         cache: 'npm'
     - run: npm ci
-    - run: npx prisma generate
+    - run: cd intent_to_ship && npx prisma generate
     - run: npm run intents:run
       env:
         DATABASE_URL: ${{ secrets.DATABASE_URL }}
