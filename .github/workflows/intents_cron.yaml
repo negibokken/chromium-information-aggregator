@@ -1,4 +1,4 @@
-name: crawler
+name: intents to ship crawler
 on:
   schedule:
     - cron:  '0 0 * * *'
