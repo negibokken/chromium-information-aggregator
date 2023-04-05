@@ -1,4 +1,4 @@
-name: intents to ship crawler
+name: intent to ship crawler
 on:
   schedule:
     - cron:  '0 0 * * *'
@@ -16,7 +16,7 @@ jobs:
         cache: 'npm'
     - run: npm ci
     - run: npx prisma generate
-    - run: npm run intents:run
+    - run: npm run intent:run
       env:
         DATABASE_URL: ${{ secrets.DATABASE_URL }}
         WEB_HOOK_URL: ${{ secrets.INTENT_TO_SHIP_WEBHOOK_URL }}
