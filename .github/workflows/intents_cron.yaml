@@ -2,6 +2,11 @@ name: intents to ship crawler
 on:
   schedule:
     - cron:  '0 0 * * *'
+  workflow_dispatch:
+    inputs:
+      blank:
+        default: 'blank'
+
 jobs:
   commits_crawler:
     runs-on: ubuntu-latest
