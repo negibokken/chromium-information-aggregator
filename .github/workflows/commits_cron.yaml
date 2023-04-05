@@ -2,6 +2,8 @@ name: Chromium commits crawler
 on:
   schedule:
     - cron:  '0 */3 * * *'
+  workflow_dispatch:
+
 jobs:
   commits_crawler:
     runs-on: ubuntu-latest
