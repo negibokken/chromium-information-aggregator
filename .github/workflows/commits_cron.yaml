@@ -1,4 +1,4 @@
-name: crawler
+name: Chromium commits crawler
 on:
   schedule:
     - cron:  '0 */3 * * *'
