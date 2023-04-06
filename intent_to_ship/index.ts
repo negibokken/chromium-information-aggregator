@@ -62,7 +62,8 @@ function sleep(sec: number) {
             })
             .map(ItemClass.create);
 
-        if (process.env.WEBHOOK_URL) {
+        console.log('webhookURL set status: ', !!webhookURL);
+        if (webhookURL) {
             for (let i = 0; i < items.length; i++) {
                 let content = '';
                 while (content.length < 1700 && i < items.length) {
