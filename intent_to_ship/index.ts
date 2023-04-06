@@ -56,7 +56,7 @@ function sleep(sec: number) {
     try {
         const res = await axios.get(url);
         const data = (await parseStringPromise(res.data)) as XMLResponse;
-        const items = data.rss.channel[0].item
+        let items = data.rss.channel[0].item
             // .filter((i: any) => {
             //     return !i.title[0].includes('Re:');
             // })
@@ -65,7 +65,27 @@ function sleep(sec: number) {
             // })
             .map(ItemClass.create);
 
+        console.log(`fetched ${items.length} items`);
         console.log(items);
+
+        const lastIntent = await prismaClient.intents.findFirst({
+            select: { guid: true },
+            orderBy: { pubDate: 'desc' },
+        });
+
+        const index = items.findIndex((intent) => {
+            return lastIntent && intent.guid === lastIntent.guid;
+        });
+
+        const isLastIntentIncluded = index >= 0;
+
+        let notSavedIntent;
+        if (isLastIntentIncluded) {
+            notSavedIntent = items.slice(0, index);
+        } else {
+            notSavedIntent = items;
+        }
+        items = notSavedIntent;
 
         if (webhookURL) {
             for (let i = 0; i < items.length; i++) {
