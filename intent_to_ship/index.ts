@@ -57,12 +57,16 @@ function sleep(sec: number) {
         const res = await axios.get(url);
         const data = (await parseStringPromise(res.data)) as XMLResponse;
         const items = data.rss.channel[0].item
-            .filter((i: any) => {
-                return !i.title[0].includes('Re:');
-            })
+            // .filter((i: any) => {
+            //     return !i.title[0].includes('Re:');
+            // })
+            // .filter((i: any) => {
+            //     return i.title[0].includes('Intent to');
+            // })
             .map(ItemClass.create);
 
-        console.log('webhookURL set status: ', !!webhookURL);
+        console.log(items);
+
         if (webhookURL) {
             for (let i = 0; i < items.length; i++) {
                 let content = '';
