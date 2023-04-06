@@ -5,7 +5,7 @@ const parseStringPromise = require('xml2js').parseStringPromise;
 const prismaClient = new PrismaClient();
 
 const url = 'https://www.mail-archive.com/blink-dev@chromium.org/maillist.xml';
-const webhookURL = process.env.WEBHOOK_URL;
+const webhookURL = process.env.WEB_HOOK_URL;
 
 type XMLResponse = {
     rss: {
