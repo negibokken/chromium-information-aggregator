@@ -57,16 +57,9 @@ function sleep(sec: number) {
         const res = await axios.get(url);
         const data = (await parseStringPromise(res.data)) as XMLResponse;
         let items = data.rss.channel[0].item
-            // .filter((i: any) => {
-            //     return !i.title[0].includes('Re:');
-            // })
-            // .filter((i: any) => {
-            //     return i.title[0].includes('Intent to');
-            // })
             .map(ItemClass.create);
 
         console.log(`fetched ${items.length} items`);
-        console.log(items);
 
         const lastIntent = await prismaClient.intents.findFirst({
             select: { guid: true },
@@ -86,6 +79,8 @@ function sleep(sec: number) {
             notSavedIntent = items;
         }
         items = notSavedIntent;
+
+        console.log(`New ${items.length} items are found`)
 
         if (webhookURL) {
             for (let i = 0; i < items.length; i++) {
